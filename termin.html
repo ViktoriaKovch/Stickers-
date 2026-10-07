@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Стікери Маркування</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Inter:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f4f6; /* Дуже світлий фон для виділення білих стікерів */
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-sticker {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sticker-card {
+            background-color: #ffffff;
+            border: 3px solid #000000;
+            border-radius: 4px;
+            color: #000000;
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff;
+            }
+            #sticky-footer, .category-title {
+                display: none !important;
+            }
+            #stickers-container {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .sticker-card {
+                page-break-inside: avoid;
+                margin-bottom: 8px !important;
+                border: 2px solid #000000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="pb-28 pt-2">
+
+    <main class="max-w-md mx-auto w-full px-3">
+        <div id="stickers-container" class="flex flex-col space-y-6">
+            <!-- Стікери генеруються автоматично через JS -->
+        </div>
+    </main>
+
+    <div id="sticky-footer" class="fixed bottom-0 left-0 w-full bg-white border-t-4 border-black p-3 z-50">
+        <div class="max-w-md mx-auto">
+            <button onclick="renderStickers()" class="w-full bg-black active:bg-gray-800 text-white font-black text-xl py-4 uppercase tracking-wider rounded">
+                Оновити час
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // База даних
+        const database = [
+            {
+                category: "ДЕФРОСТ",
+                items: [
+                    { name: "Сосиска Large", days: 5 },
+                    { name: "Сосиска xLarge", days: 5 },
+                    { name: "Сосиска BIG", days: 5 },
+                    { name: "Сосиска австрійська", days: 2 },
+                    { name: "Сосиска швейцарська з сиром", days: 5 },
+                    { name: "Булки (Великі/малі)", days: 1 }
+                ]
+            },
+            {
+                category: "СОУСИ",
+                items: [
+                    { name: "Кетчуп", days: 7 },
+                    { name: "Майонез", days: 5 },
+                    { name: "Гірчиця", customText: "НЕ СТІКЕРУЄТЬСЯ" }
+                ]
+            },
+            {
+                category: "ЛОТОК",
+                items: [
+                    { name: "Сосиска Large", days: 3 },
+                    { name: "Сосиска xLarge", days: 3 },
+                    { name: "Сосиска BIG", days: 3 },
+                    { name: "Сосиска австрійська", days: 1 },
+                    { name: "Сосиска швейцарська з сиром", days: 3 },
+                    { name: "Булки (Великі/малі)", customText: "ПЕРЕКЛЕЮЄМО З УПАКОВКИ" }
+                ]
+            }
+        ];
+
+        function getFormattedParts(date) {
+            const d = String(date.getDate()).padStart(2, '0');
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const y = String(date.getFullYear()).slice(-2); // Двозначний рік
+            const h = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            
+            return {
+                dateStr: `${d}.${m}.${y}`,
+                timeStr: `${h}:${min}`
+            };
+        }
+
+        function getDaysText(days) {
+            if (days === 1) return '1 доба';
+            if (days >= 2 && days <= 4) return `${days} доби`;
+            return `${days} діб`;
+        }
+
+        function renderStickers() {
+            const container = document.getElementById('stickers-container');
+            container.innerHTML = ''; 
+            
+            const now = new Date();
+            const startParts = getFormattedParts(now);
+
+            database.forEach(section => {
+                // Заголовок категорії
+                const catHeader = document.createElement('div');
+                catHeader.className = "category-title text-center text-xl font-black mt-4 mb-2 uppercase tracking-widest border-b-2 border-black pb-1";
+                catHeader.innerText = section.category;
+                container.appendChild(catHeader);
+
+                // Рендер карток товарів
+                section.items.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "sticker-card p-3 sm:p-4 flex flex-col justify-center";
+
+                    let contentHtml = `<div class="text-center font-black text-xl mb-3 uppercase leading-tight">${item.name}</div>`;
+
+                    if (item.customText) {
+                        contentHtml += `<div class="text-center font-sticker text-xl py-4 border-t-2 border-dashed border-black">${item.customText}</div>`;
+                    } else {
+                        // Обчислення кінцевого часу (додаємо дні, мінус 1 хвилина = 60000 мс)
+                        const endDate = new Date(now.getTime() + (item.days * 24 * 60 * 60 * 1000) - 60000);
+                        const endParts = getFormattedParts(endDate);
+                        const daysText = getDaysText(item.days);
+
+                        contentHtml += `
+                            <div class="flex border-t-2 border-dashed border-black pt-3 mt-1">
+                                <div class="flex-grow font-sticker text-lg sm:text-xl flex flex-col justify-center pr-3 border-r-2 border-dashed border-black">
+                                    <div class="flex justify-between mb-2">
+                                        <span>${startParts.dateStr}</span>
+                                        <span>${startParts.timeStr}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>${endParts.dateStr}</span>
+                                        <span>${endParts.timeStr}</span>
+                                    </div>
+                                </div>
+                                <div class="w-16 sm:w-20 flex-shrink-0 flex items-center justify-center pl-2">
+                                    <span class="font-black text-lg text-center leading-tight uppercase">${daysText.replace(' ', '<br>')}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    card.innerHTML = contentHtml;
+                    container.appendChild(card);
+                });
+            });
+
+            // Вібрація при оновленні, якщо підтримується
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderStickers;
+    </script>
+</body>
+</html>
