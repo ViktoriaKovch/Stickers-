@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Стікери для випічки</title>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 22px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #fff;
+        }
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1em;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button.danger {
+            background-color: #f44336;
+        }
+        button:active {
+            opacity: 0.8;
+        }
+        .sticker-item {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        .sticker-text {
+            font-family: monospace;
+            font-size: 16px;
+            line-height: 1.4;
+            margin: 10px 0;
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px dashed #ccc;
+            text-align: center;
+            width: fit-content;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Стиль для повідомлень про помилки */
+        #debugBox {
+            display: none; 
+            background: #ffebee; 
+            color: #c62828; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            text-align: center; 
+            font-weight: bold; 
+            border: 1px solid #ef9a9a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Стікери на слойку</h2>
+        
+        <div id="debugBox"></div>
+        
+        <label for="bakeDate">Дата (за замовчуванням сьогодні)</label>
+        <input type="date" id="bakeDate" required>
+
+        <label for="bakeTime">Час (коли допікалась востаннє)</label>
+        <select id="bakeTime" required>
+            <option value="" disabled selected>Виберіть час</option>
+            <option value="07:00">7:00</option>
+            <option value="08:00">8:00</option>
+            <option value="09:00">9:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+            <option value="22:00">22:00</option>
+            <option value="23:00">23:00</option>
+        </select>
+
+        <label for="pastryName">Назва слойки</label>
+        <select id="pastryName" required>
+            <option value="" disabled selected>Виберіть зі списку</option>
+            <option value="Сирна паличка листкова">Сирна паличка листкова</option>
+            <option value="Туба з куркою та сметаною">Туба з куркою та сметаною</option>
+            <option value="Сосиска в листковому тісті">Сосиска в листковому тісті</option>
+            <option value="Сосиска в тісті з америк. соусом XL">Сосиска в тісті з америк. соусом XL</option>
+            <option value="Ролліні з беконом та горохом">Ролліні з беконом та горохом</option>
+            <option value="Ролліні з куркою">Ролліні з куркою</option>
+            <option value="Ролліні з сиром та зеленню">Ролліні з сиром та зеленню</option>
+            <option value="Ролліні з бринзою та шпинатом">Ролліні з бринзою та шпинатом</option>
+        </select>
+
+        <label for="quantity">Кількість штук</label>
+        <input type="number" id="quantity" min="1" value="1" required>
+
+        <button type="button" id="addBtn">Додати в список</button>
+    </div>
+
+    <div class="card" id="resultsCard" style="display: none;">
+        <div class="flex-between">
+            <h2>Список стікерів</h2>
+            <button type="button" class="danger" style="width: auto; padding: 8px 12px;" id="clearBtn">Очистити все</button>
+        </div>
+        <div id="resultsList"></div>
+    </div>
+</div>
+
+<script>
+    // Функція для виведення помилок прямо на екран замість заблокованого alert()
+    function showMessage(msg) {
+        const box = document.getElementById('debugBox');
+        box.innerText = msg;
+        box.style.display = 'block';
+        setTimeout(() => { box.style.display = 'none'; }, 4000);
+    }
+
+    let entries = [];
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        try {
+            const savedData = localStorage.getItem('bakeryEntries');
+            if (savedData) {
+                entries = JSON.parse(savedData);
+            }
+        } catch (e) {
+            console.log("LocalStorage недоступний");
+        }
+
+        try {
+            // Встановлюємо поточну дату
+            const d = new Date();
+            const year = d.getFullYear();
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            document.getElementById('bakeDate').value = [year, month, day].join('-');
+            
+            // Встановлюємо поточний час
+            const currentHour = d.getHours();
+            const timeSelect = document.getElementById('bakeTime');
+            
+            if (currentHour >= 7 && currentHour <= 23) {
+                let hh = '' + currentHour;
+                if (hh.length < 2) hh = '0' + hh;
+                timeSelect.value = hh + ":00";
+            } else {
+                timeSelect.value = "07:00";
+            }
+
+            renderResults();
+        } catch (err) {
+            showMessage("Помилка старту сторінки: " + err.message);
+        }
+    });
+
+    // Прив'язуємо подію кліку через JavaScript, що є надійнішим для iPhone
+    document.getElementById('addBtn').addEventListener('click', () => {
+        try {
+            const dateStr = document.getElementById('bakeDate').value;
+            const timeStr = document.getElementById('bakeTime').value;
+            const name = document.getElementById('pastryName').value;
+            const qtyStr = document.getElementById('quantity').value;
+            const qty = parseInt(qtyStr, 10);
+
+            if (!dateStr || !timeStr || !name || !qty) {
+                showMessage("Будь ласка, перевірте, чи обрана назва слойки та час!");
+                return;
+            }
+
+            const dateParts = dateStr.split('-');
+            const timeParts = timeStr.split(':');
+            
+            const year = parseInt(dateParts[0], 10);
+            const month = parseInt(dateParts[1], 10) - 1;
+            const day = parseInt(dateParts[2], 10);
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+
+            const startDateTime = new Date(year, month, day, hours, minutes);
+            const endDateTime = new Date(startDateTime.getTime() + (36 * 60 * 60 * 1000) - (60 * 1000));
+
+            // Ручне форматування дат без специфічних функцій, щоб не "злити" старі iOS
+            let dd1 = '' + startDateTime.getDate();
+            let mm1 = '' + (startDateTime.getMonth() + 1);
+            let yy1 = String(startDateTime.getFullYear()).slice(-2);
+            if (dd1.length < 2) dd1 = '0' + dd1;
+            if (mm1.length < 2) mm1 = '0' + mm1;
+            const startD = `${dd1}.${mm1}.${yy1}`;
+
+            const startH = startDateTime.getHours();
+            let startM = '' + startDateTime.getMinutes();
+            if (startM.length < 2) startM = '0' + startM;
+            const startT = `${startH}:${startM}`;
+
+            let dd2 = '' + endDateTime.getDate();
+            let mm2 = '' + (endDateTime.getMonth() + 1);
+            let yy2 = String(endDateTime.getFullYear()).slice(-2);
+            if (dd2.length < 2) dd2 = '0' + dd2;
+            if (mm2.length < 2) mm2 = '0' + mm2;
+            const endD = `${dd2}.${mm2}.${yy2}`;
+
+            const endH = endDateTime.getHours();
+            let endM = '' + endDateTime.getMinutes();
+            if (endM.length < 2) endM = '0' + endM;
+            const endT = `${endH}:${endM}`;
+
+            const entry = {
+                name: name,
+                qty: qty,
+                sticker: {
+                    startDate: startD,
+                    startTime: startT,
+                    endTime: endT,
+                    endDate: endD
+                }
+            };
+
+            entries.push(entry);
+            
+            try {
+                localStorage.setItem('bakeryEntries', JSON.stringify(entries));
+            } catch (e) {
+                // Ігноруємо, якщо пам'ять заблокована
+            }
+            
+            renderResults();
+            
+            document.getElementById('quantity').value = 1; 
+            document.getElementById('pastryName').value = '';
+            
+        } catch (err) {
+            showMessage("Системна помилка: " + err.message);
+        }
+    });
+
+    function renderResults() {
+        const resultsCard = document.getElementById('resultsCard');
+        const resultsList = document.getElementById('resultsList');
+        
+        if (entries.length === 0) {
+            resultsCard.style.display = 'none';
+            return;
+        }
+
+        resultsCard.style.display = 'block';
+        resultsList.innerHTML = '';
+
+        let grouped = {};
+        
+        entries.forEach(item => {
+            const key = `${item.name}|${item.sticker.startDate}|${item.sticker.startTime}`;
+            if (!grouped[key]) {
+                // Копіюємо об'єкт класичним методом
+                grouped[key] = {
+                    name: item.name,
+                    qty: item.qty,
+                    sticker: item.sticker
+                };
+            } else {
+                grouped[key].qty += item.qty;
+            }
+        });
+
+        for (const key in grouped) {
+            const item = grouped[key];
+            const div = document.createElement('div');
+            div.className = 'sticker-item';
+            div.innerHTML = `
+                <strong>${item.name}</strong> — Потрібно стікерів: <strong>${item.qty} шт.</strong>
+                <div class="sticker-text">
+                    ${item.sticker.startDate}<br>
+                    ${item.sticker.startTime}<br>
+                    ${item.sticker.endTime}<br>
+                    ${item.sticker.endDate}
+                </div>
+            `;
+            resultsList.appendChild(div);
+        }
+    }
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        // У Telegram WebView confirm() також може блокуватися, тому замість нього просто очищуємо
+        entries = [];
+        try {
+            localStorage.removeItem('bakeryEntries');
+        } catch (e) {}
+        renderResults();
+    });
+</script>
+
+</body>
+</html>
